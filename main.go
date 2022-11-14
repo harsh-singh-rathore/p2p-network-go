@@ -1,33 +1,33 @@
 package main
 
 import (
-	"bufio"
-	"context"
+	// "bufio"
+	// "context"
 	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"flag"
+	// "crypto/sha256"
+	// "encoding/hex"
+	// "encoding/json"
+	// "flag"
 	"fmt"
 	"io"
 	"log"
 	mrand "math/rand"
-	"os"
-	"strconv"
-	"strings"
-	"sync"
-	"time"
+	// "os"
+	// "strconv"
+	// "strings"
+	// "sync"
+	// "time"
 
-	"github.com/davecgh/go-spew/spew"
-	golog "github.com/ipfs/go-log"
+	// "github.com/davecgh/go-spew/spew"
+	// golog "github.com/ipfs/go-log"
 	libp2p "github.com/libp2p/go-libp2p"
-	crypto "github.com/libp2p/go-libp2p-crypto"
-	host "github.com/libp2p/go-libp2p-host"
-	net "github.com/libp2p/go-libp2p-net"
-	peer "github.com/libp2p/go-libp2p-peer"
-	pstore "github.com/libp2p/go-libp2p-peerstore"
+	crypto "github.com/libp2p/go-libp2p-core/crypto"
+	host "github.com/libp2p/go-libp2p-core/host"
+	// net "github.com/libp2p/go-libp2p-net"
+	// peer "github.com/libp2p/go-libp2p-peer"
+	// pstore "github.com/libp2p/go-libp2p-peerstore"
 	ma "github.com/multiformats/go-multiaddr"
-	gologging "github.com/whyrusleeping/go-logging"
+	// gologging "github.com/whyrusleeping/go-logging"
 )
 
 // makeBasicHost creates a LibP2P host with a random peer ID listening on the
@@ -56,11 +56,11 @@ func makeBasicHost(listenPort int, secio bool, randseed int64) (host.Host, error
 		libp2p.Identity(priv),
 	}
 
-	if !secio {
-		opts = append(opts, libp2p.NoEncryption())
-	}
+	// if !secio {
+	// 	opts = append(opts, libp2p.NoEncryption())
+	// }
 
-	basicHost, err := libp2p.New(context.Background(), opts...)
+	basicHost, err := libp2p.New( /* context.Background(), */ opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,25 +83,10 @@ func makeBasicHost(listenPort int, secio bool, randseed int64) (host.Host, error
 }
 
 func main() {
-	// start a libp2p node with default settings
-	node, err := libp2p.New(
-		libp2p.ListenAddrStrings("/ip4/127.0.0.1/tcp/2000"),
-	)
+	// new host.Host
+	ha, err := makeBasicHost(0, true, 0)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	// print the node's listening addresses
-	fmt.Println("Listen addresses:", node.Addrs())
-
-	// wait for a SIGINT or SIGTERM signal
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	<-ch
-	fmt.Println("Received signal, shutting down...")
-
-	// shut the node down
-	if err := node.Close(); err != nil {
-		panic(err)
-	}
+	fmt.Print(ha)
 }
