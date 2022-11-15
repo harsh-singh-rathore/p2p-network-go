@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/rand"
+
 	// "crypto/sha256"
 	// "encoding/hex"
 	"encoding/json"
@@ -13,6 +14,7 @@ import (
 	"log"
 	mrand "math/rand"
 	"os"
+
 	// "strconv"
 	// "strings"
 	"sync"
@@ -59,12 +61,10 @@ func generateBlock(oldBlock Block, value string) Block {
 }
 
 // makeBasicHost creates a LibP2P host with a random peer ID listening on the
-// given multiaddress. It will use secio if secio is true.
+// given multiaddress. It will use secio if secio is true. For some reason false didn't work
 func makeBasicHost(listenPort int, secio bool, randseed int64) (host.Host, error) {
 
-	// If the seed is zero, use real cryptographic randomness. Otherwise, use a
-	// deterministic randomness source to make generated keys stay the same
-	// across multiple runs
+	// If the seed is zero, use real cryptographic randomness. Otherwise use consistent seed for testing
 	var r io.Reader
 	if randseed == 0 {
 		r = rand.Reader
@@ -135,9 +135,7 @@ func readData(rw *bufio.ReadWriter) {
 
 					log.Fatal(err)
 				}
-				// Green console color: 	\x1b[32m
-				// Reset console color: 	\x1b[0m
-				fmt.Printf("\x1b[32m%s\x1b[0m> ", string(bytes))
+				fmt.Printf("> %v", string(bytes))
 			}
 			mutex.Unlock()
 		}
@@ -215,9 +213,6 @@ func main() {
 
 	Blockchain = append(Blockchain, genesisBlock)
 
-	// LibP2P code uses golog to log messages. They log with different
-	// string IDs (i.e. "swarm"). We can control the verbosity level for
-	// all loggers with:
 	golog.SetAllLoggers(golog.LevelInfo) // to get logging info
 
 	// Parse options from the command line
